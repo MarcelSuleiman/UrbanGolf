@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Výsledky – {{ course.name }}{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-2">Výsledky</h1>
+<p class="text-gray-400 mb-8">{{ course.name }} – Par {{ course.total_par }}</p>
+
+<!-- Individual leaderboard -->
+<h2 class="text-2xl font-bold mb-4">Jednotlivci</h2>
+{% if individual %}
+    <div class="bg-gray-800 rounded-lg overflow-hidden mb-10">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-700">
+                <tr>
+                    <th class="px-4 py-2 text-left">#</th>
+                    <th class="px-4 py-2 text-left">Hráč</th>
+                    <th class="px-4 py-2 text-center">Údery</th>
+                    <th class="px-4 py-2 text-center">Bonus</th>
+                    <th class="px-4 py-2 text-center">Penalizácia</th>
+                    <th class="px-4 py-2 text-center font-bold">Skóre</th>
+                    <th class="px-4 py-2 text-center">vs Par</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for round in individual %}
+                    <tr class="border-t border-gray-700 {% if loop.index <= 3 %}bg-gray-750{% endif %}">
+                        <td class="px-4 py-2">
+                            {% if loop.index == 1 %}🥇
+                            {% elif loop.index == 2 %}🥈
+                            {% elif loop.index == 3 %}🥉
+                            {% else %}{{ loop.index }}{% endif %}
+                        </td>
+                        <td class="px-4 py-2 font-medium">{{ round.player.name }}</td>
+                        <td class="px-4 py-2 text-center">{{ round.total_strokes }}</td>
+                        <td class="px-4 py-2 text-center text-green-400">{{ round.total_bonus }}</td>
+                        <td class="px-4 py-2 text-center text-red-400">+{{ round.total_penalty }}</td>
+                        <td class="px-4 py-2 text-center font-bold text-lg">{{ round.total_score }}</td>
+                        <td class="px-4 py-2 text-center
+                            {% if round.vs_par < 0 %}text-green-400
+                            {% elif round.vs_par == 0 %}text-gray-400
+                            {% else %}text-red-400{% endif %}">
+                            {% if round.vs_par > 0 %}+{% endif %}{{ round.vs_par }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p class="text-gray-500 mb-10">Zatiaľ žiadne dokončené kolá.</p>
+{% endif %}
+
+<!-- Team leaderboard -->
+<h2 class="text-2xl font-bold mb-4">Tímy</h2>
+{% if team_leaderboard %}
+    <div class="bg-gray-800 rounded-lg overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-700">
+                <tr>
+                    <th class="px-4 py-2 text-left">#</th>
+                    <th class="px-4 py-2 text-left">Tím</th>
+                    <th class="px-4 py-2 text-center">Hráči</th>
+                    <th class="px-4 py-2 text-center font-bold">Celkové skóre</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in team_leaderboard %}
+                    <tr class="border-t border-gray-700">
+                        <td class="px-4 py-2">
+                            {% if loop.index == 1 %}🥇
+                            {% elif loop.index == 2 %}🥈
+                            {% elif loop.index == 3 %}🥉
+                            {% else %}{{ loop.index }}{% endif %}
+                        </td>
+                        <td class="px-4 py-2 font-medium">{{ entry.team.name }}</td>
+                        <td class="px-4 py-2 text-center text-gray-400 text-xs">
+                            {% for r in entry.rounds %}
+                                {{ r.player.name }} ({{ r.total_score }}){% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="px-4 py-2 text-center font-bold text-lg">{{ entry.total }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p class="text-gray-500">Zatiaľ žiadne tímové výsledky.</p>
+{% endif %}
+
+<div class="mt-6">
+    <a href="{{ url_for('main.index') }}" class="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg inline-block">
+        Späť na hlavnú
+    </a>
+</div>
+{% endblock %}

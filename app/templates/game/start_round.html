@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Začať hru – {{ course.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto">
+    <h1 class="text-3xl font-bold mb-2">Začať hru</h1>
+    <p class="text-gray-400 mb-6">Trasa: <span class="text-green-400 font-medium">{{ course.name }}</span> ({{ course.hole_count }} jamiek, Par {{ course.total_par }})</p>
+
+    <form method="POST" class="bg-gray-800 rounded-lg p-6">
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-300 mb-2">Hráš za tím? (voliteľné)</label>
+            <select name="team_id" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
+                <option value="">— Hrám sám —</option>
+                {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.name }} ({{ team.player_names|join(', ') }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded font-bold text-lg">
+            Štart!
+        </button>
+    </form>
+</div>
+{% endblock %}

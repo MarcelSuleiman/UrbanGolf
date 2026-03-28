@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Vytvoriť tím – Urban Golf BA{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center">Vytvoriť tím</h1>
+
+    <form method="POST" class="bg-gray-800 rounded-lg p-6">
+        <div class="mb-6">
+            <label for="team_name" class="block text-sm font-medium text-gray-300 mb-2">
+                Názov tímu
+            </label>
+            <input type="text" id="team_name" name="team_name" required maxlength="100"
+                   class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                   placeholder="napr. Bratislava Swingers">
+        </div>
+
+        <h3 class="text-lg font-medium mb-3 text-gray-300">Členovia tímu (4 hráči)</h3>
+        <p class="text-sm text-gray-500 mb-4">Všetci hráči musia byť zaregistrovaní.</p>
+
+        {% for i in range(1, 5) %}
+            <div class="mb-3">
+                <label for="member_{{ i }}" class="block text-sm text-gray-400 mb-1">
+                    Hráč {{ i }}
+                </label>
+                <input type="text" id="member_{{ i }}" name="member_{{ i }}" required
+                       list="player-list"
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                       placeholder="Meno hráča"
+                       {% if i == 1 %}value="{{ session.get('player_name', '') }}"{% endif %}>
+            </div>
+        {% endfor %}
+
+        <datalist id="player-list">
+            {% for player in players %}
+                <option value="{{ player.name }}">
+            {% endfor %}
+        </datalist>
+
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded font-bold text-lg mt-4">
+            Vytvoriť tím
+        </button>
+    </form>
+</div>
+{% endblock %}

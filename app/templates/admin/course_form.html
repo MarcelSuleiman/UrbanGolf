@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{% if course %}Upraviť trasu{% else %}Nová trasa{% endif %} – Admin{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto">
+    <h1 class="text-3xl font-bold mb-6">{% if course %}Upraviť trasu{% else %}Nová trasa{% endif %}</h1>
+
+    <form method="POST" class="bg-gray-800 rounded-lg p-6">
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Názov trasy</label>
+            <input type="text" id="name" name="name" required maxlength="200"
+                   value="{{ course.name if course else '' }}"
+                   class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                   placeholder="napr. Staré Mesto Circuit">
+        </div>
+
+        <div class="mb-4">
+            <label for="description" class="block text-sm font-medium text-gray-300 mb-2">Popis</label>
+            <textarea id="description" name="description" rows="3"
+                      class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                      placeholder="Popis trasy...">{{ course.description if course else '' }}</textarea>
+        </div>
+
+        <div class="mb-4">
+            <label for="city" class="block text-sm font-medium text-gray-300 mb-2">Mesto</label>
+            <input type="text" id="city" name="city" maxlength="100"
+                   value="{{ course.city if course else 'Bratislava' }}"
+                   class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
+        </div>
+
+        {% if course %}
+            <div class="mb-4">
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="is_active" {% if course.is_active %}checked{% endif %}
+                           class="rounded bg-gray-700 border-gray-600 text-green-500 focus:ring-green-500">
+                    <span class="text-gray-300">Aktívna (viditeľná pre hráčov)</span>
+                </label>
+            </div>
+        {% endif %}
+
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded font-bold">
+            {% if course %}Uložiť zmeny{% else %}Vytvoriť trasu{% endif %}
+        </button>
+    </form>
+
+    {% if course %}
+        <form method="POST" action="{{ url_for('admin.delete_course', course_id=course.id) }}" class="mt-4"
+              onsubmit="return confirm('Naozaj odstrániť celú trasu {{ course.name }}? Toto zmaže aj všetky jamky!')">
+            <button type="submit" class="w-full bg-red-800 hover:bg-red-700 py-2 rounded text-sm">
+                Odstrániť trasu
+            </button>
+        </form>
+    {% endif %}
+
+    <a href="{{ url_for('admin.dashboard') }}" class="block text-center text-gray-500 hover:text-gray-300 mt-4">
+        ← Späť na admin
+    </a>
+</div>
+{% endblock %}

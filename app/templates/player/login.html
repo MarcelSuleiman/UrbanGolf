@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Prihlásenie – Urban Golf BA{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center">Prihlásenie</h1>
+
+    <form method="POST" class="bg-gray-800 rounded-lg p-6">
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-300 mb-2">
+                Tvoje meno
+            </label>
+            <input type="text" id="name" name="name" required maxlength="50"
+                   class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                   placeholder="Zadaj svoje meno">
+        </div>
+
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded font-bold text-lg">
+            Prihlásiť sa
+        </button>
+    </form>
+
+    <p class="text-center text-gray-500 mt-4">
+        Nemáš účet? <a href="{{ url_for('player.register') }}" class="text-green-400 hover:underline">Zaregistruj sa</a>
+    </p>
+</div>
+{% endblock %}

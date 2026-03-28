@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}{% if hole %}Upraviť jamku{% else %}Nová jamka{% endif %} – Admin{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold mb-2">{% if hole %}Upraviť jamku {{ hole.number }}{% else %}Nová jamka{% endif %}</h1>
+    <p class="text-gray-400 mb-6">Trasa: {{ course.name }}</p>
+
+    <!-- Map for picking coordinates -->
+    <div id="picker-map" class="w-full h-80 rounded-lg mb-4 z-0"></div>
+    <p class="text-sm text-gray-500 mb-6">Klikni na mapu pre nastavenie štartu (1. klik) a cieľa (2. klik).</p>
+
+    <form method="POST" class="bg-gray-800 rounded-lg p-6">
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label for="number" class="block text-sm font-medium text-gray-300 mb-2">Číslo jamky</label>
+                <input type="number" id="number" name="number" min="1" required
+                       value="{{ hole.number if hole else next_number }}"
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
+            </div>
+            <div>
+                <label for="par" class="block text-sm font-medium text-gray-300 mb-2">Par</label>
+                <input type="number" id="par" name="par" min="1" max="10" required
+                       value="{{ hole.par if hole else 3 }}"
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Názov jamky (voliteľné)</label>
+            <input type="text" id="name" name="name" maxlength="200"
+                   value="{{ hole.name if hole else '' }}"
+                   class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                   placeholder="napr. Námestie SNP Sprint">
+        </div>
+
+        <div class="mb-4">
+            <label for="description" class="block text-sm font-medium text-gray-300 mb-2">Popis / Inštrukcie</label>
+            <textarea id="description" name="description" rows="2"
+                      class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                      placeholder="Hraj od fontány smerom k soche...">{{ hole.description if hole else '' }}</textarea>
+        </div>
+
+        <h3 class="text-lg font-medium text-green-400 mb-3">Štart (odkiaľ sa hrá)</h3>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label for="start_lat" class="block text-sm text-gray-400 mb-1">Latitude</label>
+                <input type="number" step="any" id="start_lat" name="start_lat" required
+                       value="{{ hole.start_lat if hole else '48.145' }}"
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
+            </div>
+            <div>
+                <label for="start_lng" class="block text-sm text-gray-400 mb-1">Longitude</label>
+                <input type="number" step="any" id="start_lng" name="start_lng" required
+                       value="{{ hole.start_lng if hole else '17.107' }}"
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
+            </div>
+        </div>
+
+        <h3 class="text-lg font-medium text-red-400 mb-3">Cieľ (jamka)</h3>
+        <div class="mb-4">
+            <label for="target_description" class="block text-sm text-gray-400 mb-1">Popis cieľa</label>
+            <input type="text" id="target_description" name="target_description" maxlength="500"
+                   value="{{ hole.target_description if hole else '' }}"
+                   class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                   placeholder="napr. Zelená lampa pri lavičke">
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div>
+                <label for="target_lat" class="block text-sm text-gray-400 mb-1">Latitude</label>
+                <input type="number" step="any" id="target_lat" name="target_lat" required
+                       value="{{ hole.target_lat if hole else '48.145' }}"
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
+            </div>
+            <div>
+                <label for="target_lng" class="block text-sm text-gray-400 mb-1">Longitude</label>
+                <input type="number" step="any" id="target_lng" name="target_lng" required
+                       value="{{ hole.target_lng if hole else '17.107' }}"
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
+            </div>
+        </div>
+
+        <!-- Bonus targets -->
+        <h3 class="text-lg font-medium text-yellow-400 mb-3">Bonusy a penalizácie</h3>
+        <p class="text-sm text-gray-500 mb-3">Záporné body = bonus (zníženie skóre). Kladné body = penalizácia (zvýšenie skóre).</p>
+
+        <div id="bonus-targets">
+            {% if hole and hole.bonus_targets %}
+                {% for bt in hole.bonus_targets %}
+                    <div class="bonus-row grid grid-cols-12 gap-2 mb-2">
+                        <input type="text" name="bonus_name[]" value="{{ bt.name }}" placeholder="Názov"
+                               class="col-span-4 bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-green-500">
+                        <input type="number" name="bonus_points[]" value="{{ bt.points }}" placeholder="Body"
+                               class="col-span-2 bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-green-500">
+                        <input type="text" name="bonus_desc[]" value="{{ bt.description or '' }}" placeholder="Popis"
+                               class="col-span-5 bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-green-500">
+                        <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-red-400 hover:text-red-300">✕</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <button type="button" onclick="addBonusRow()" class="text-sm text-green-400 hover:text-green-300 mb-6 block">
+            + Pridať bonus/penalizáciu
+        </button>
+
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded font-bold">
+            {% if hole %}Uložiť zmeny{% else %}Pridať jamku{% endif %}
+        </button>
+    </form>
+
+    <a href="{{ url_for('admin.edit_course', course_id=course.id) }}" class="block text-center text-gray-500 hover:text-gray-300 mt-4">
+        ← Späť na trasu
+    </a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function addBonusRow() {
+        const container = document.getElementById('bonus-targets');
+        const row = document.createElement('div');
+        row.className = 'bonus-row grid grid-cols-12 gap-2 mb-2';
+        row.innerHTML = `
+            <input type="text" name="bonus_name[]" placeholder="napr. Ceduľa hore" class="col-span-4 bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-green-500">
+            <input type="number" name="bonus_points[]" placeholder="-1" class="col-span-2 bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-green-500">
+            <input type="text" name="bonus_desc[]" placeholder="Popis" class="col-span-5 bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-green-500">
+            <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-red-400 hover:text-red-300">✕</button>
+        `;
+        container.appendChild(row);
+    }
+
+    // Map coordinate picker
+    const defaultLat = {{ hole.start_lat if hole else 48.1486 }};
+    const defaultLng = {{ hole.start_lng if hole else 17.1077 }};
+
+    const map = L.map('picker-map').setView([defaultLat, defaultLng], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OSM'
+    }).addTo(map);
+
+    let clickCount = 0;
+    let startMarker = null;
+    let targetMarker = null;
+    let line = null;
+
+    {% if hole %}
+        startMarker = L.marker([{{ hole.start_lat }}, {{ hole.start_lng }}], {
+            icon: L.divIcon({className:'', html:'<div style="background:#22c55e;color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid white;">S</div>', iconSize:[24,24], iconAnchor:[12,12]})
+        }).addTo(map);
+        targetMarker = L.marker([{{ hole.target_lat }}, {{ hole.target_lng }}], {
+            icon: L.divIcon({className:'', html:'<div style="background:#ef4444;color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid white;">⛳</div>', iconSize:[24,24], iconAnchor:[12,12]})
+        }).addTo(map);
+        line = L.polyline([[{{ hole.start_lat }}, {{ hole.start_lng }}], [{{ hole.target_lat }}, {{ hole.target_lng }}]], {color:'#22c55e', weight:3, dashArray:'8,8'}).addTo(map);
+        map.fitBounds([[{{ hole.start_lat }}, {{ hole.start_lng }}], [{{ hole.target_lat }}, {{ hole.target_lng }}]], {padding:[40,40]});
+        clickCount = 2;
+    {% endif %}
+
+    map.on('click', function(e) {
+        const lat = e.latlng.lat.toFixed(6);
+        const lng = e.latlng.lng.toFixed(6);
+
+        if (clickCount % 2 === 0) {
+            // Set start
+            document.getElementById('start_lat').value = lat;
+            document.getElementById('start_lng').value = lng;
+            if (startMarker) map.removeLayer(startMarker);
+            startMarker = L.marker(e.latlng, {
+                icon: L.divIcon({className:'', html:'<div style="background:#22c55e;color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid white;">S</div>', iconSize:[24,24], iconAnchor:[12,12]})
+            }).addTo(map);
+        } else {
+            // Set target
+            document.getElementById('target_lat').value = lat;
+            document.getElementById('target_lng').value = lng;
+            if (targetMarker) map.removeLayer(targetMarker);
+            targetMarker = L.marker(e.latlng, {
+                icon: L.divIcon({className:'', html:'<div style="background:#ef4444;color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid white;">⛳</div>', iconSize:[24,24], iconAnchor:[12,12]})
+            }).addTo(map);
+
+            // Draw line
+            if (line) map.removeLayer(line);
+            const startLat = document.getElementById('start_lat').value;
+            const startLng = document.getElementById('start_lng').value;
+            line = L.polyline([[startLat, startLng], e.latlng], {color:'#22c55e', weight:3, dashArray:'8,8'}).addTo(map);
+        }
+        clickCount++;
+    });
+</script>
+{% endblock %}

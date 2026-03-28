@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Výsledok – {{ round.course.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold mb-2">Kolo dokončené!</h1>
+        <p class="text-gray-400">{{ round.course.name }} – {{ round.player.name }}</p>
+        {% if round.team %}
+            <p class="text-gray-500">Tím: {{ round.team.name }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Total score -->
+    <div class="bg-gray-800 rounded-lg p-6 text-center mb-8">
+        <div class="text-6xl font-bold {% if round.vs_par < 0 %}text-green-400{% elif round.vs_par == 0 %}text-white{% else %}text-red-400{% endif %}">
+            {{ round.total_score }}
+        </div>
+        <div class="text-lg text-gray-400 mt-2">
+            {% if round.vs_par < 0 %}
+                {{ round.vs_par }} pod par
+            {% elif round.vs_par == 0 %}
+                Presne par
+            {% else %}
+                +{{ round.vs_par }} nad par
+            {% endif %}
+        </div>
+        <div class="flex justify-center space-x-6 mt-4 text-sm">
+            <span class="text-gray-400">Údery: {{ round.total_strokes }}</span>
+            <span class="text-green-400">Bonusy: {{ round.total_bonus }}</span>
+            <span class="text-red-400">Penalizácie: +{{ round.total_penalty }}</span>
+        </div>
+    </div>
+
+    <!-- Per-hole breakdown -->
+    <h2 class="text-2xl font-bold mb-4">Scorecard</h2>
+    <div class="bg-gray-800 rounded-lg overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-700">
+                <tr>
+                    <th class="px-4 py-2 text-left">Jamka</th>
+                    <th class="px-4 py-2 text-center">Par</th>
+                    <th class="px-4 py-2 text-center">Údery</th>
+                    <th class="px-4 py-2 text-center">Bonus</th>
+                    <th class="px-4 py-2 text-center">Penalizácia</th>
+                    <th class="px-4 py-2 text-center font-bold">Spolu</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score in round.scores|sort(attribute='hole.number') %}
+                    <tr class="border-t border-gray-700">
+                        <td class="px-4 py-2">{{ score.hole.number }}{% if score.hole.name %} – {{ score.hole.name }}{% endif %}</td>
+                        <td class="px-4 py-2 text-center text-gray-400">{{ score.hole.par }}</td>
+                        <td class="px-4 py-2 text-center">{{ score.strokes }}</td>
+                        <td class="px-4 py-2 text-center text-green-400">{{ score.bonus_points if score.bonus_points else '' }}</td>
+                        <td class="px-4 py-2 text-center text-red-400">{{ ('+' ~ score.penalty_points) if score.penalty_points else '' }}</td>
+                        <td class="px-4 py-2 text-center font-bold
+                            {% if score.total < score.hole.par %}text-green-400
+                            {% elif score.total == score.hole.par %}text-white
+                            {% else %}text-red-400{% endif %}">
+                            {{ score.total }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr class="border-t-2 border-gray-600 font-bold">
+                    <td class="px-4 py-3">SPOLU</td>
+                    <td class="px-4 py-3 text-center text-gray-400">{{ round.course.total_par }}</td>
+                    <td class="px-4 py-3 text-center">{{ round.total_strokes }}</td>
+                    <td class="px-4 py-3 text-center text-green-400">{{ round.total_bonus }}</td>
+                    <td class="px-4 py-3 text-center text-red-400">+{{ round.total_penalty }}</td>
+                    <td class="px-4 py-3 text-center text-lg">{{ round.total_score }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex space-x-4 mt-6">
+        <a href="{{ url_for('game.leaderboard', course_id=round.course.id) }}"
+           class="bg-yellow-700 hover:bg-yellow-600 px-6 py-3 rounded-lg font-bold">
+            Výsledková tabuľka
+        </a>
+        <a href="{{ url_for('main.index') }}"
+           class="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg">
+            Späť na hlavnú
+        </a>
+    </div>
+</div>
+{% endblock %}

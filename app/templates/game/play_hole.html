@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Jamka {{ hole_num }} – {{ round.course.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Progress bar -->
+    <div class="mb-6">
+        <div class="flex justify-between text-sm text-gray-400 mb-1">
+            <span>Jamka {{ hole_num }} / {{ total_holes }}</span>
+            <span>{{ round.course.name }}</span>
+        </div>
+        <div class="w-full bg-gray-700 rounded-full h-2">
+            <div class="bg-green-500 h-2 rounded-full" style="width: {{ (hole_num / total_holes * 100)|int }}%"></div>
+        </div>
+    </div>
+
+    <h1 class="text-3xl font-bold mb-2">
+        Jamka {{ hole.number }}{% if hole.name %} – {{ hole.name }}{% endif %}
+    </h1>
+    <p class="text-gray-400 mb-2">Par {{ hole.par }}</p>
+    {% if hole.description %}
+        <p class="text-gray-300 mb-4">{{ hole.description }}</p>
+    {% endif %}
+
+    <!-- Mini map -->
+    <div id="hole-map" class="w-full h-64 rounded-lg mb-6 z-0"></div>
+
+    <div class="grid grid-cols-2 gap-4 text-sm mb-6">
+        <div class="bg-gray-800 rounded p-3">
+            <span class="text-green-400 font-medium block">Štart</span>
+            <span class="text-gray-300">{{ "%.6f"|format(hole.start_lat) }}, {{ "%.6f"|format(hole.start_lng) }}</span>
+        </div>
+        <div class="bg-gray-800 rounded p-3">
+            <span class="text-red-400 font-medium block">Cieľ: {{ hole.target_description or 'Cieľ' }}</span>
+            <span class="text-gray-300">{{ "%.6f"|format(hole.target_lat) }}, {{ "%.6f"|format(hole.target_lng) }}</span>
+        </div>
+    </div>
+
+    {% if hole.bonus_targets %}
+        <div class="bg-gray-800 rounded-lg p-4 mb-6">
+            <h3 class="font-medium mb-2 text-yellow-400">Bonusy a penalizácie na tejto jamke:</h3>
+            {% for bt in hole.bonus_targets %}
+                <div class="flex justify-between items-center py-1">
+                    <span class="text-gray-300">{{ bt.name }}{% if bt.description %} – {{ bt.description }}{% endif %}</span>
+                    <span class="font-bold {% if bt.is_bonus %}text-green-400{% else %}text-red-400{% endif %}">
+                        {{ bt.points if bt.points > 0 else bt.points }}
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Score form -->
+    <form method="POST" class="bg-gray-800 rounded-lg p-6">
+        <div class="mb-4">
+            <label for="strokes" class="block text-sm font-medium text-gray-300 mb-2">
+                Počet úderov
+            </label>
+            <input type="number" id="strokes" name="strokes" min="1" max="20" required
+                   value="{{ existing_score.strokes if existing_score else '' }}"
+                   class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-3 text-white text-2xl text-center focus:outline-none focus:border-green-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label for="bonus_points" class="block text-sm font-medium text-green-400 mb-2">
+                    Bonus (záporné číslo)
+                </label>
+                <input type="number" id="bonus_points" name="bonus_points" max="0"
+                       value="{{ existing_score.bonus_points if existing_score else 0 }}"
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white text-center focus:outline-none focus:border-green-500">
+                <p class="text-xs text-gray-500 mt-1">Napr. -1 za trafenie ceduľe</p>
+            </div>
+            <div>
+                <label for="penalty_points" class="block text-sm font-medium text-red-400 mb-2">
+                    Penalizácia (kladné číslo)
+                </label>
+                <input type="number" id="penalty_points" name="penalty_points" min="0"
+                       value="{{ existing_score.penalty_points if existing_score else 0 }}"
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white text-center focus:outline-none focus:border-green-500">
+                <p class="text-xs text-gray-500 mt-1">Napr. +2 za zasiahnutie auta</p>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="notes" class="block text-sm font-medium text-gray-300 mb-2">
+                Poznámky (voliteľné)
+            </label>
+            <textarea id="notes" name="notes" rows="2"
+                      class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500"
+                      placeholder="Napr. trafil som babku s nákupom...">{{ existing_score.notes if existing_score else '' }}</textarea>
+        </div>
+
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded font-bold text-lg">
+            {% if hole_num < total_holes %}
+                Ďalšia jamka →
+            {% else %}
+                Dokončiť hru!
+            {% endif %}
+        </button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const startPos = [{{ hole.start_lat }}, {{ hole.start_lng }}];
+    const targetPos = [{{ hole.target_lat }}, {{ hole.target_lng }}];
+
+    const map = L.map('hole-map');
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OSM'
+    }).addTo(map);
+
+    const startIcon = L.divIcon({
+        className: '',
+        html: '<div style="background:#22c55e;color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:11px;border:2px solid white;">S</div>',
+        iconSize: [24, 24], iconAnchor: [12, 12]
+    });
+
+    const targetIcon = L.divIcon({
+        className: '',
+        html: '<div style="background:#ef4444;color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:11px;border:2px solid white;">⛳</div>',
+        iconSize: [24, 24], iconAnchor: [12, 12]
+    });
+
+    L.marker(startPos, {icon: startIcon}).addTo(map).bindPopup('Štart');
+    L.marker(targetPos, {icon: targetIcon}).addTo(map).bindPopup('{{ hole.target_description or "Cieľ" }}');
+    L.polyline([startPos, targetPos], {color: '#22c55e', weight: 3, dashArray: '8,8'}).addTo(map);
+
+    map.fitBounds([startPos, targetPos], {padding: [40, 40]});
+</script>
+{% endblock %}

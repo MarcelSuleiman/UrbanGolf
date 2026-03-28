@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Urban Golf Bratislava{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .flash-message { animation: fadeOut 5s forwards; }
+        @keyframes fadeOut {
+            0%, 80% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-green-800 shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="{{ url_for('main.index') }}" class="flex items-center space-x-2">
+                    <span class="text-2xl">⛳</span>
+                    <span class="text-xl font-bold text-white">Urban Golf BA</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    {% if session.get('player_name') %}
+                        <span class="text-green-200">{{ session.player_name }}</span>
+                        <a href="{{ url_for('player.create_team') }}" class="text-green-200 hover:text-white text-sm">Tímy</a>
+                        <a href="{{ url_for('player.logout') }}" class="bg-green-700 hover:bg-green-600 px-3 py-1 rounded text-sm">Odhlásiť</a>
+                    {% else %}
+                        <a href="{{ url_for('player.login') }}" class="text-green-200 hover:text-white">Prihlásiť</a>
+                        <a href="{{ url_for('player.register') }}" class="bg-green-600 hover:bg-green-500 px-4 py-2 rounded font-medium">Registrácia</a>
+                    {% endif %}
+                    <a href="{{ url_for('admin.dashboard') }}" class="text-green-300 hover:text-white text-sm">Admin</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="max-w-6xl mx-auto px-4 mt-4">
+                {% for category, message in messages %}
+                    <div class="flash-message p-3 rounded mb-2
+                        {% if category == 'error' %}bg-red-600
+                        {% elif category == 'success' %}bg-green-600
+                        {% else %}bg-blue-600{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 text-center py-4 mt-12">
+        <p>Urban Golf Bratislava &copy; 2026</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
