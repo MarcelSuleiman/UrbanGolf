@@ -59,7 +59,7 @@ def play_hole(round_id, hole_num):
 
     if request.method == "POST":
         strokes = int(request.form.get("strokes", 0))
-        bonus_points = int(request.form.get("bonus_points", 0))
+        bonus_points = -abs(int(request.form.get("bonus_points", 0)))
         penalty_points = int(request.form.get("penalty_points", 0))
         notes = request.form.get("notes", "").strip()
 

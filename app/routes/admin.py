@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, Response
 from app import db
 from app.models import Course, Hole, BonusTarget
+import json
 
 admin_bp = Blueprint("admin", __name__)
 
@@ -143,9 +144,111 @@ def delete_hole(hole_id):
     return redirect(url_for("admin.edit_course", course_id=course_id))
 
 
+@admin_bp.route("/course/<int:course_id>/export")
+def export_course(course_id):
+    course = Course.query.get_or_404(course_id)
+    data = {
+        "name": course.name,
+        "description": course.description,
+        "city": course.city,
+        "holes": [],
+    }
+    for hole in course.holes:
+        hole_data = {
+            "number": hole.number,
+            "name": hole.name,
+            "description": hole.description,
+            "par": hole.par,
+            "start_lat": hole.start_lat,
+            "start_lng": hole.start_lng,
+            "target_lat": hole.target_lat,
+            "target_lng": hole.target_lng,
+            "target_description": hole.target_description,
+            "bonuses": [
+                {
+                    "name": bt.name,
+                    "description": bt.description,
+                    "points": bt.points,
+                }
+                for bt in hole.bonus_targets
+            ],
+        }
+        data["holes"].append(hole_data)
+
+    json_str = json.dumps(data, ensure_ascii=False, indent=2)
+    import re
+    safe_name = re.sub(r'[^a-zA-Z0-9_-]', '_', course.name.lower())
+    filename = safe_name + ".json"
+    return Response(
+        json_str,
+        mimetype="application/json",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@admin_bp.route("/course/import", methods=["GET", "POST"])
+def import_course():
+    if request.method == "POST":
+        file = request.files.get("file")
+        if not file:
+            flash("Vyber JSON súbor.", "error")
+            return redirect(url_for("admin.import_course"))
+
+        try:
+            data = json.loads(file.read().decode("utf-8"))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            flash("Neplatný JSON súbor.", "error")
+            return redirect(url_for("admin.import_course"))
+
+        course = Course(
+            name=data.get("name", "Importovaná trasa"),
+            description=data.get("description", ""),
+            city=data.get("city", "Bratislava"),
+        )
+        db.session.add(course)
+        db.session.flush()
+
+        for hdata in data.get("holes", []):
+            hole = Hole(
+                course_id=course.id,
+                number=hdata.get("number", 1),
+                name=hdata.get("name", ""),
+                description=hdata.get("description", ""),
+                par=hdata.get("par", 3),
+                start_lat=hdata.get("start_lat", 0),
+                start_lng=hdata.get("start_lng", 0),
+                target_lat=hdata.get("target_lat", 0),
+                target_lng=hdata.get("target_lng", 0),
+                target_description=hdata.get("target_description", ""),
+            )
+            db.session.add(hole)
+            db.session.flush()
+
+            for bdata in hdata.get("bonuses", []):
+                bt = BonusTarget(
+                    hole_id=hole.id,
+                    name=bdata.get("name", ""),
+                    description=bdata.get("description", ""),
+                    points=bdata.get("points", 0),
+                )
+                db.session.add(bt)
+
+        db.session.commit()
+        flash(f'Trasa "{course.name}" bola importovaná!', "success")
+        return redirect(url_for("admin.dashboard"))
+
+    return render_template("admin/import_course.html")
+
+
 @admin_bp.route("/course/<int:course_id>/delete", methods=["POST"])
 def delete_course(course_id):
+    from app.models import Round, Score
     course = Course.query.get_or_404(course_id)
+    # Delete all rounds and scores for this course
+    rounds = Round.query.filter_by(course_id=course_id).all()
+    for r in rounds:
+        Score.query.filter_by(round_id=r.id).delete()
+    Round.query.filter_by(course_id=course_id).delete()
     db.session.delete(course)
     db.session.commit()
     flash(f'Trasa "{course.name}" bola odstránená.', "success")
