@@ -7,7 +7,29 @@
     <h1 class="text-3xl font-bold mb-2">Začať hru</h1>
     <p class="text-gray-400 mb-6">Trasa: <span class="text-green-400 font-medium">{{ course.name }}</span> ({{ course.hole_count }} jamiek, Par {{ course.total_par }})</p>
 
+    {% if unfinished %}
+        <div class="bg-yellow-900 border border-yellow-700 rounded-lg p-5 mb-6">
+            <h3 class="text-lg font-bold text-yellow-400 mb-2">Máš rozpracovanú hru!</h3>
+            <p class="text-gray-300 text-sm mb-1">
+                Odohraných jamiek: {{ unfinished.scores|length }} / {{ course.hole_count }}
+            </p>
+            <p class="text-gray-300 text-sm mb-4">
+                Aktuálne skóre: {{ unfinished.total_score }}
+                {% if unfinished.team %}· Tím: {{ unfinished.team.name }}{% endif %}
+            </p>
+            <form method="POST" class="flex space-x-3">
+                <input type="hidden" name="action" value="continue">
+                <button type="submit" class="flex-1 bg-yellow-600 hover:bg-yellow-500 py-3 rounded font-bold text-lg">
+                    Pokračovať v hre
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center text-gray-500 mb-4">– alebo –</div>
+    {% endif %}
+
     <form method="POST" class="bg-gray-800 rounded-lg p-6">
+        <input type="hidden" name="action" value="new">
         <div class="mb-6">
             <label class="block text-sm font-medium text-gray-300 mb-2">Hráš za tím? (voliteľné)</label>
             <select name="team_id" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
@@ -18,8 +40,9 @@
             </select>
         </div>
 
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded font-bold text-lg">
-            Štart!
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded font-bold text-lg"
+                {% if unfinished %}onclick="return confirm('Toto zmaže tvoju rozpracovanú hru. Pokračovať?')"{% endif %}>
+            {% if unfinished %}Začať odznova{% else %}Štart!{% endif %}
         </button>
     </form>
 </div>

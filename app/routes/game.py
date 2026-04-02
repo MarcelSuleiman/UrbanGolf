@@ -21,7 +21,33 @@ def start_round(course_id):
     course = Course.query.get_or_404(course_id)
     player = Player.query.get(session["player_id"])
 
+    # Check for unfinished round on this course
+    unfinished = Round.query.filter_by(
+        player_id=player.id, course_id=course.id, is_complete=False
+    ).first()
+
     if request.method == "POST":
+        action = request.form.get("action", "new")
+
+        if action == "continue" and unfinished:
+            # Find next unplayed hole
+            played_holes = {s.hole.number for s in unfinished.scores}
+            next_hole = 1
+            for h in course.holes:
+                if h.number not in played_holes:
+                    next_hole = h.number
+                    break
+            else:
+                # All holes played, go to last one to review/finish
+                next_hole = course.holes[-1].number
+            return redirect(url_for("game.play_hole", round_id=unfinished.id, hole_num=next_hole))
+
+        # Start new round (abandon old one if exists)
+        if unfinished:
+            Score.query.filter_by(round_id=unfinished.id).delete()
+            db.session.delete(unfinished)
+            db.session.commit()
+
         team_id = request.form.get("team_id")
         team_id = int(team_id) if team_id else None
 
@@ -41,7 +67,7 @@ def start_round(course_id):
         .filter(TeamMember.player_id == player.id)
         .all()
     )
-    return render_template("game/start_round.html", course=course, teams=teams)
+    return render_template("game/start_round.html", course=course, teams=teams, unfinished=unfinished)
 
 
 @game_bp.route("/play/<int:round_id>/hole/<int:hole_num>", methods=["GET", "POST"])
@@ -118,13 +144,22 @@ def round_result(round_id):
 def leaderboard(course_id):
     course = Course.query.get_or_404(course_id)
 
-    # Individual leaderboard
+    # Individual leaderboard - completed
     completed_rounds = (
         Round.query.filter_by(course_id=course_id, is_complete=True)
         .join(Player)
         .all()
     )
     individual = sorted(completed_rounds, key=lambda r: r.total_score)
+
+    # In-progress rounds
+    in_progress = (
+        Round.query.filter_by(course_id=course_id, is_complete=False)
+        .join(Player)
+        .all()
+    )
+    in_progress = [r for r in in_progress if r.scores]
+    in_progress = sorted(in_progress, key=lambda r: r.total_score)
 
     # Team leaderboard
     team_scores = {}
@@ -145,5 +180,24 @@ def leaderboard(course_id):
         "game/leaderboard.html",
         course=course,
         individual=individual,
+        in_progress=in_progress,
         team_leaderboard=team_leaderboard,
     )
+
+
+@game_bp.route("/abandon/<int:round_id>", methods=["POST"])
+def abandon_round(round_id):
+    if "player_id" not in session:
+        flash("Najprv sa prihlás.", "error")
+        return redirect(url_for("player.login"))
+
+    round_ = Round.query.get_or_404(round_id)
+    if round_.player_id != session["player_id"]:
+        flash("Toto nie je tvoje kolo.", "error")
+        return redirect(url_for("main.index"))
+
+    Score.query.filter_by(round_id=round_.id).delete()
+    db.session.delete(round_)
+    db.session.commit()
+    flash("Hra bola ukončená.", "info")
+    return redirect(url_for("main.index"))

@@ -51,6 +51,37 @@
     <p class="text-gray-500 mb-10">Zatiaľ žiadne dokončené kolá.</p>
 {% endif %}
 
+<!-- In-progress rounds -->
+{% if in_progress %}
+<h2 class="text-2xl font-bold mb-4 text-yellow-400">Práve hrajú</h2>
+    <div class="bg-gray-800 rounded-lg overflow-hidden mb-10">
+        <table class="w-full text-sm">
+            <thead class="bg-yellow-900">
+                <tr>
+                    <th class="px-4 py-2 text-left">Hráč</th>
+                    <th class="px-4 py-2 text-center">Jamiek</th>
+                    <th class="px-4 py-2 text-center">Údery</th>
+                    <th class="px-4 py-2 text-center">Bonus</th>
+                    <th class="px-4 py-2 text-center">Penalizácia</th>
+                    <th class="px-4 py-2 text-center font-bold">Priebežné skóre</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for round in in_progress %}
+                    <tr class="border-t border-gray-700">
+                        <td class="px-4 py-2 font-medium">{{ round.player.name }}</td>
+                        <td class="px-4 py-2 text-center text-gray-400">{{ round.scores|length }} / {{ course.hole_count }}</td>
+                        <td class="px-4 py-2 text-center">{{ round.total_strokes }}</td>
+                        <td class="px-4 py-2 text-center text-green-400">{{ round.total_bonus }}</td>
+                        <td class="px-4 py-2 text-center text-red-400">+{{ round.total_penalty }}</td>
+                        <td class="px-4 py-2 text-center font-bold text-yellow-400">{{ round.total_score }}*</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
 <!-- Team leaderboard -->
 <h2 class="text-2xl font-bold mb-4">Tímy</h2>
 {% if team_leaderboard %}

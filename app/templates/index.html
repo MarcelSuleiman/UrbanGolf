@@ -24,6 +24,33 @@
     {% endif %}
 </div>
 
+<!-- Unfinished rounds -->
+{% if unfinished_rounds %}
+    <div class="mb-8">
+        {% for round in unfinished_rounds %}
+            <div class="bg-yellow-900 border border-yellow-700 rounded-lg p-4 mb-3 flex justify-between items-center">
+                <div>
+                    <span class="text-yellow-400 font-bold">Rozpracovaná hra:</span>
+                    <span class="text-gray-200">{{ round.course.name }}</span>
+                    <span class="text-gray-400 text-sm">({{ round.scores|length }} / {{ round.course.hole_count }} jamiek, skóre: {{ round.total_score }})</span>
+                </div>
+                <div class="flex space-x-2">
+                    <a href="{{ url_for('game.start_round', course_id=round.course_id) }}"
+                       class="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded font-medium text-sm">
+                        Pokračovať
+                    </a>
+                    <form method="POST" action="{{ url_for('game.abandon_round', round_id=round.id) }}"
+                          onsubmit="return confirm('Naozaj ukončiť túto hru? Skóre sa stratí.')">
+                        <button type="submit" class="bg-red-700 hover:bg-red-600 px-4 py-2 rounded font-medium text-sm">
+                            Ukončiť
+                        </button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <!-- How it works -->
 <div class="grid md:grid-cols-3 gap-6 mb-12">
     <div class="bg-gray-800 rounded-lg p-6 text-center">

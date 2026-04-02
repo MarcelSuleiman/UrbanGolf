@@ -105,6 +105,15 @@
 
 {% block scripts %}
 <script>
+    document.querySelectorAll('#bonus_points, #penalty_points').forEach(input => {
+        input.addEventListener('focus', function() {
+            if (this.value === '0') this.value = '';
+        });
+        input.addEventListener('blur', function() {
+            if (this.value === '') this.value = '0';
+        });
+    });
+
     const startPos = [{{ hole.start_lat }}, {{ hole.start_lng }}];
     const targetPos = [{{ hole.target_lat }}, {{ hole.target_lng }}];
 
