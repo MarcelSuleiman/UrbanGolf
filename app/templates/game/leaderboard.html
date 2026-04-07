@@ -82,6 +82,42 @@
     </div>
 {% endif %}
 
+<!-- Team in-progress leaderboard -->
+{% if team_inprogress %}
+<h2 class="text-2xl font-bold mb-4 text-yellow-400">Tímy – práve hrajú</h2>
+    <div class="bg-gray-800 rounded-lg overflow-hidden mb-10">
+        <table class="w-full text-sm">
+            <thead class="bg-yellow-900">
+                <tr>
+                    <th class="px-4 py-2 text-left">#</th>
+                    <th class="px-4 py-2 text-left">Tím</th>
+                    <th class="px-4 py-2 text-center">Členovia</th>
+                    <th class="px-4 py-2 text-center font-bold">Priebežné skóre</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in team_inprogress %}
+                    <tr class="border-t border-gray-700">
+                        <td class="px-4 py-2 text-gray-400">{{ loop.index }}</td>
+                        <td class="px-4 py-2 font-medium">{{ entry.team.name }}</td>
+                        <td class="px-4 py-2 text-xs text-gray-400">
+                            {% for r in entry.rounds %}
+                                {% if r.is_complete %}
+                                    <span class="text-green-400">{{ r.player.name }} ({{ r.total_score }} ✓)</span>
+                                {% else %}
+                                    <span class="text-yellow-400">{{ r.player.name }} ({{ r.total_score }}* – {{ r.scores|length }}/{{ course.hole_count }} jamiek)</span>
+                                {% endif %}
+                                {% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="px-4 py-2 text-center font-bold text-lg text-yellow-400">{{ entry.total }}*</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
 <!-- Team leaderboard -->
 <h2 class="text-2xl font-bold mb-4">Tímy</h2>
 {% if team_leaderboard %}

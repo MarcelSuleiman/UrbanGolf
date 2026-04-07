@@ -66,20 +66,17 @@ def create_team():
 
     if request.method == "POST":
         team_name = request.form.get("team_name", "").strip()
-        member_names = [
-            request.form.get(f"member_{i}", "").strip() for i in range(1, 5)
-        ]
-        member_names = [n for n in member_names if n]
+        member_names = [n.strip() for n in request.form.getlist("member") if n.strip()]
 
         if not team_name:
             flash("Názov tímu je povinný.", "error")
             return redirect(url_for("player.create_team"))
 
-        if len(member_names) != 4:
-            flash("Tím musí mať presne 4 hráčov.", "error")
+        if len(member_names) < 2:
+            flash("Tím musí mať aspoň 2 hráčov.", "error")
             return redirect(url_for("player.create_team"))
 
-        if len(set(member_names)) != 4:
+        if len(set(member_names)) != len(member_names):
             flash("Mená hráčov sa nesmú opakovať.", "error")
             return redirect(url_for("player.create_team"))
 
@@ -110,3 +107,70 @@ def create_team():
 
     players = Player.query.order_by(Player.name).all()
     return render_template("player/create_team.html", players=players)
+
+
+@player_bp.route("/teams")
+def teams():
+    if "player_id" not in session:
+        flash("Najprv sa prihlás.", "error")
+        return redirect(url_for("player.login"))
+
+    all_teams = Team.query.order_by(Team.name).all()
+    current_player_id = session["player_id"]
+    return render_template("player/teams.html", teams=all_teams, current_player_id=current_player_id)
+
+
+@player_bp.route("/team/<int:team_id>/edit", methods=["GET", "POST"])
+def edit_team(team_id):
+    if "player_id" not in session:
+        flash("Najprv sa prihlás.", "error")
+        return redirect(url_for("player.login"))
+
+    team = Team.query.get_or_404(team_id)
+
+    if request.method == "POST":
+        team_name = request.form.get("team_name", "").strip()
+        member_names = [n.strip() for n in request.form.getlist("member") if n.strip()]
+
+        if not team_name:
+            flash("Názov tímu je povinný.", "error")
+            return redirect(url_for("player.edit_team", team_id=team_id))
+
+        if len(member_names) < 2:
+            flash("Tím musí mať aspoň 2 hráčov.", "error")
+            return redirect(url_for("player.edit_team", team_id=team_id))
+
+        if len(set(member_names)) != len(member_names):
+            flash("Mená hráčov sa nesmú opakovať.", "error")
+            return redirect(url_for("player.edit_team", team_id=team_id))
+
+        existing = Team.query.filter(Team.name == team_name, Team.id != team_id).first()
+        if existing:
+            flash(f'Tím "{team_name}" už existuje.', "error")
+            return redirect(url_for("player.edit_team", team_id=team_id))
+
+        players = []
+        for name in member_names:
+            player = Player.query.filter_by(name=name).first()
+            if not player:
+                flash(f'Hráč "{name}" neexistuje.', "error")
+                return redirect(url_for("player.edit_team", team_id=team_id))
+            players.append(player)
+
+        team.name = team_name
+        TeamMember.query.filter_by(team_id=team.id).delete()
+        for player in players:
+            db.session.add(TeamMember(team_id=team.id, player_id=player.id))
+
+        db.session.commit()
+        flash(f'Tím "{team_name}" bol aktualizovaný.', "success")
+        return redirect(url_for("player.teams"))
+
+    all_players = Player.query.order_by(Player.name).all()
+    current_member_ids = {m.player_id for m in team.members}
+    return render_template(
+        "player/edit_team.html",
+        team=team,
+        players=all_players,
+        current_member_ids=current_member_ids,
+    )

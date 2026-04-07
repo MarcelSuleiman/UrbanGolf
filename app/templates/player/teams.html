@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Tímy – Urban Golf BA{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Tímy</h1>
+        <a href="{{ url_for('player.create_team') }}"
+           class="bg-green-600 hover:bg-green-500 px-5 py-2 rounded font-medium text-sm">
+            + Vytvoriť tím
+        </a>
+    </div>
+
+    {% if teams %}
+        <div class="space-y-4">
+            {% for team in teams %}
+                <div class="bg-gray-800 rounded-lg p-5">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-xl font-bold text-green-400">{{ team.name }}</h2>
+                            <p class="text-gray-500 text-xs mt-0.5">
+                                Vytvorený {{ team.created_at.strftime('%d.%m.%Y') }}
+                            </p>
+                        </div>
+                        <a href="{{ url_for('player.edit_team', team_id=team.id) }}"
+                           class="bg-gray-700 hover:bg-gray-600 px-4 py-1.5 rounded text-sm shrink-0 ml-4">
+                            ✏ Upraviť
+                        </a>
+                    </div>
+
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        {% for member in team.members %}
+                            <span class="inline-flex items-center gap-1.5 bg-gray-700 rounded-full px-3 py-1 text-sm
+                                {% if member.player_id == current_player_id %}ring-1 ring-green-500 text-green-300{% else %}text-gray-200{% endif %}">
+                                {% if member.player_id == current_player_id %}
+                                    <span class="text-green-400 text-xs">★</span>
+                                {% endif %}
+                                {{ member.player.name }}
+                            </span>
+                        {% endfor %}
+                    </div>
+
+                    <p class="text-gray-600 text-xs mt-3">{{ team.member_count }} hráč{{ 'i' if team.member_count in [2,3,4] else 'ov' if team.member_count >= 5 else '' }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="bg-gray-800 rounded-lg p-10 text-center text-gray-500">
+            <p class="text-lg mb-4">Zatiaľ nie sú žiadne tímy.</p>
+            <a href="{{ url_for('player.create_team') }}"
+               class="bg-green-600 hover:bg-green-500 px-6 py-2 rounded font-medium">
+                Vytvoriť prvý tím
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

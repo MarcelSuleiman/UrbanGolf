@@ -161,20 +161,40 @@ def leaderboard(course_id):
     in_progress = [r for r in in_progress if r.scores]
     in_progress = sorted(in_progress, key=lambda r: r.total_score)
 
-    # Team leaderboard
-    team_scores = {}
-    team_rounds = (
-        Round.query.filter_by(course_id=course_id, is_complete=True)
-        .filter(Round.team_id.isnot(None))
-        .all()
+    # Team leaderboard — group all rounds (any state, with at least 1 score) by team
+    all_team_rounds_grouped = {}
+    all_team_rounds = (
+        Round.query.filter(
+            Round.course_id == course_id,
+            Round.team_id.isnot(None),
+        ).all()
     )
-    for r in team_rounds:
-        if r.team_id not in team_scores:
-            team_scores[r.team_id] = {"team": r.team, "rounds": [], "total": 0}
-        team_scores[r.team_id]["rounds"].append(r)
-        team_scores[r.team_id]["total"] += r.total_score
+    for r in all_team_rounds:
+        if not r.scores:
+            continue
+        tid = r.team_id
+        if tid not in all_team_rounds_grouped:
+            all_team_rounds_grouped[tid] = {
+                "team": r.team,
+                "rounds": [],
+                "total": 0,
+                "has_incomplete": False,
+            }
+        all_team_rounds_grouped[tid]["rounds"].append(r)
+        all_team_rounds_grouped[tid]["total"] += r.total_score
+        if not r.is_complete:
+            all_team_rounds_grouped[tid]["has_incomplete"] = True
 
-    team_leaderboard = sorted(team_scores.values(), key=lambda t: t["total"])
+    # Completed teams: all members with rounds have finished
+    team_leaderboard = sorted(
+        [v for v in all_team_rounds_grouped.values() if not v["has_incomplete"]],
+        key=lambda t: t["total"],
+    )
+    # In-progress teams: at least one member still playing
+    team_inprogress = sorted(
+        [v for v in all_team_rounds_grouped.values() if v["has_incomplete"]],
+        key=lambda t: t["total"],
+    )
 
     return render_template(
         "game/leaderboard.html",
@@ -182,6 +202,7 @@ def leaderboard(course_id):
         individual=individual,
         in_progress=in_progress,
         team_leaderboard=team_leaderboard,
+        team_inprogress=team_inprogress,
     )
 
 

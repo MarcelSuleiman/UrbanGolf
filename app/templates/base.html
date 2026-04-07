@@ -29,7 +29,7 @@
                 <div class="flex items-center space-x-4">
                     {% if session.get('player_name') %}
                         <span class="text-green-200">{{ session.player_name }}</span>
-                        <a href="{{ url_for('player.create_team') }}" class="text-green-200 hover:text-white text-sm">Tímy</a>
+                        <a href="{{ url_for('player.teams') }}" class="text-green-200 hover:text-white text-sm">Tímy</a>
                         <a href="{{ url_for('player.logout') }}" class="bg-green-700 hover:bg-green-600 px-3 py-1 rounded text-sm">Odhlásiť</a>
                     {% else %}
                         <a href="{{ url_for('player.login') }}" class="text-green-200 hover:text-white">Prihlásiť</a>

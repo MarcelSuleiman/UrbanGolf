@@ -16,31 +16,114 @@
                    placeholder="napr. Bratislava Swingers">
         </div>
 
-        <h3 class="text-lg font-medium mb-3 text-gray-300">Členovia tímu (4 hráči)</h3>
-        <p class="text-sm text-gray-500 mb-4">Všetci hráči musia byť zaregistrovaní.</p>
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-lg font-medium text-gray-300">Členovia tímu</h3>
+            <span id="member-count" class="text-sm text-gray-500">2 hráči</span>
+        </div>
+        <p class="text-sm text-gray-500 mb-4">Minimálne 2 hráči. Všetci musia byť zaregistrovaní.</p>
 
-        {% for i in range(1, 5) %}
-            <div class="mb-3">
-                <label for="member_{{ i }}" class="block text-sm text-gray-400 mb-1">
-                    Hráč {{ i }}
-                </label>
-                <input type="text" id="member_{{ i }}" name="member_{{ i }}" required
-                       list="player-list"
-                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500"
-                       placeholder="Meno hráča"
-                       {% if i == 1 %}value="{{ session.get('player_name', '') }}"{% endif %}>
+        <div id="members-list" class="space-y-3 mb-4">
+            <!-- Row 1 — pre-filled with logged-in player, cannot be removed -->
+            <div class="member-row flex items-center gap-2">
+                <select name="member"
+                        class="flex-1 bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
+                    <option value="">— vyber hráča —</option>
+                    {% for p in players %}
+                        <option value="{{ p.name }}"
+                            {% if p.id == session.get('player_id') %}selected{% endif %}>
+                            {{ p.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="button" class="remove-btn text-gray-600 hover:text-red-400 px-2 py-2 text-xl leading-none invisible" title="Odstrániť">×</button>
             </div>
-        {% endfor %}
 
-        <datalist id="player-list">
-            {% for player in players %}
-                <option value="{{ player.name }}">
-            {% endfor %}
-        </datalist>
+            <!-- Row 2 — empty by default -->
+            <div class="member-row flex items-center gap-2">
+                <select name="member"
+                        class="flex-1 bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
+                    <option value="">— vyber hráča —</option>
+                    {% for p in players %}
+                        <option value="{{ p.name }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="button" class="remove-btn text-gray-600 hover:text-red-400 px-2 py-2 text-xl leading-none invisible" title="Odstrániť">×</button>
+            </div>
+        </div>
 
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded font-bold text-lg mt-4">
+        <button type="button" id="add-member"
+                class="w-full border border-dashed border-gray-600 hover:border-green-500 hover:text-green-400 text-gray-400 py-2 rounded text-sm mb-6 transition-colors">
+            + Pridať ďalšieho hráča
+        </button>
+
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded font-bold text-lg">
             Vytvoriť tím
         </button>
     </form>
 </div>
+
+<script>
+(function () {
+    const list = document.getElementById('members-list');
+    const addBtn = document.getElementById('add-member');
+    const countLabel = document.getElementById('member-count');
+
+    // Player options HTML — built once from server-rendered data
+    const playerOptions = `<option value="">— vyber hráča —</option>` +
+        Array.from(document.querySelectorAll('#members-list select')[0].options)
+             .slice(1)                          // skip the placeholder
+             .map(o => `<option value="${o.value}">${o.text}</option>`)
+             .join('');
+
+    function updateUI() {
+        const rows = list.querySelectorAll('.member-row');
+        const n = rows.length;
+
+        // Update counter label
+        countLabel.textContent = n + ' ' + (n === 1 ? 'hráč' : n < 5 ? 'hráči' : 'hráčov');
+
+        rows.forEach((row, i) => {
+            const btn = row.querySelector('.remove-btn');
+            // Show remove button only when there are more than 2 rows
+            if (n <= 2) {
+                btn.classList.add('invisible');
+            } else {
+                btn.classList.remove('invisible');
+            }
+        });
+    }
+
+    function buildRow() {
+        const div = document.createElement('div');
+        div.className = 'member-row flex items-center gap-2';
+        div.innerHTML = `
+            <select name="member"
+                    class="flex-1 bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:outline-none focus:border-green-500">
+                ${playerOptions}
+            </select>
+            <button type="button" class="remove-btn text-gray-600 hover:text-red-400 px-2 py-2 text-xl leading-none" title="Odstrániť">×</button>
+        `;
+        div.querySelector('.remove-btn').addEventListener('click', function () {
+            div.remove();
+            updateUI();
+        });
+        return div;
+    }
+
+    // Wire up remove buttons on the initial two rows
+    list.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            btn.closest('.member-row').remove();
+            updateUI();
+        });
+    });
+
+    addBtn.addEventListener('click', function () {
+        list.appendChild(buildRow());
+        updateUI();
+    });
+
+    updateUI();
+})();
+</script>
 {% endblock %}
