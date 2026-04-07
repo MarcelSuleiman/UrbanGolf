@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}Výsledky – {{ course.name }}{% endblock %}
 
@@ -92,7 +92,8 @@
                     <th class="px-4 py-2 text-left">#</th>
                     <th class="px-4 py-2 text-left">Tím</th>
                     <th class="px-4 py-2 text-center">Členovia</th>
-                    <th class="px-4 py-2 text-center font-bold">Priebežné skóre</th>
+                    <th class="px-4 py-2 text-center">Celkové skóre</th>
+                    <th class="px-4 py-2 text-center font-bold">Priemer / hráč</th>
                 </tr>
             </thead>
             <tbody>
@@ -110,7 +111,8 @@
                                 {% if not loop.last %}, {% endif %}
                             {% endfor %}
                         </td>
-                        <td class="px-4 py-2 text-center font-bold text-lg text-yellow-400">{{ entry.total }}*</td>
+                        <td class="px-4 py-2 text-center text-yellow-300">{{ entry.total }}*</td>
+                        <td class="px-4 py-2 text-center font-bold text-lg text-yellow-400">{{ entry.average }}*</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -128,7 +130,8 @@
                     <th class="px-4 py-2 text-left">#</th>
                     <th class="px-4 py-2 text-left">Tím</th>
                     <th class="px-4 py-2 text-center">Hráči</th>
-                    <th class="px-4 py-2 text-center font-bold">Celkové skóre</th>
+                    <th class="px-4 py-2 text-center">Celkové skóre</th>
+                    <th class="px-4 py-2 text-center font-bold">Priemer / hráč</th>
                 </tr>
             </thead>
             <tbody>
@@ -146,7 +149,8 @@
                                 {{ r.player.name }} ({{ r.total_score }}){% if not loop.last %}, {% endif %}
                             {% endfor %}
                         </td>
-                        <td class="px-4 py-2 text-center font-bold text-lg">{{ entry.total }}</td>
+                        <td class="px-4 py-2 text-center text-gray-300">{{ entry.total }}</td>
+                        <td class="px-4 py-2 text-center font-bold text-lg">{{ entry.average }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

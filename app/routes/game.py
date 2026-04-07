@@ -185,15 +185,21 @@ def leaderboard(course_id):
         if not r.is_complete:
             all_team_rounds_grouped[tid]["has_incomplete"] = True
 
+    # Compute average score per player for each team entry
+    for v in all_team_rounds_grouped.values():
+        count = len(v["rounds"])
+        v["player_count"] = count
+        v["average"] = round(v["total"] / count, 2) if count else 0
+
     # Completed teams: all members with rounds have finished
     team_leaderboard = sorted(
         [v for v in all_team_rounds_grouped.values() if not v["has_incomplete"]],
-        key=lambda t: t["total"],
+        key=lambda t: t["average"],
     )
     # In-progress teams: at least one member still playing
     team_inprogress = sorted(
         [v for v in all_team_rounds_grouped.values() if v["has_incomplete"]],
-        key=lambda t: t["total"],
+        key=lambda t: t["average"],
     )
 
     return render_template(
