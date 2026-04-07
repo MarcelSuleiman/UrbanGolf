@@ -1,0 +1,82 @@
+<svg width="960" height="620" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+  <!-- Page bg -->
+  <rect width="960" height="620" fill="#111827"/>
+
+  <!-- NAV -->
+  <rect width="960" height="58" fill="#14532d"/>
+  <text x="22" y="37" fill="white" font-size="20" font-weight="700">⛳ Urban Golf BA</text>
+  <rect x="680" y="16" width="80" height="28" rx="5" fill="#166534"/>
+  <text x="720" y="34" fill="#bbf7d0" font-size="13" text-anchor="middle">Prihlásiť</text>
+  <rect x="772" y="16" width="94" height="28" rx="5" fill="#166534"/>
+  <text x="819" y="34" fill="#bbf7d0" font-size="13" text-anchor="middle">Registrácia</text>
+  <rect x="878" y="16" width="60" height="28" rx="5" fill="#166534"/>
+  <text x="908" y="34" fill="#bbf7d0" font-size="13" text-anchor="middle">Admin</text>
+
+  <!-- HERO -->
+  <rect x="40" y="76" width="880" height="168" rx="14" fill="#1f2937"/>
+  <text x="480" y="124" fill="white" font-size="28" font-weight="700" text-anchor="middle">Urban Golf Bratislava</text>
+  <text x="480" y="154" fill="#9ca3af" font-size="14" text-anchor="middle">Vezmi palicu, nájdi cieľ, zaúder. Lampy, sochy, fontány — celé mesto je tvojím ihriskom.</text>
+  <text x="480" y="174" fill="#9ca3af" font-size="14" text-anchor="middle">Hraj s priateľmi, zbieraj bonusy, vyhýbaj sa chodcom a autám.</text>
+  <rect x="322" y="196" width="152" height="36" rx="8" fill="#16a34a"/>
+  <text x="398" y="219" fill="white" font-size="14" font-weight="700" text-anchor="middle">Zaregistrovať sa</text>
+  <rect x="488" y="196" width="152" height="36" rx="8" fill="#374151"/>
+  <text x="564" y="219" fill="white" font-size="14" font-weight="700" text-anchor="middle">Prihlásiť sa</text>
+
+  <!-- HOW TO PLAY cards -->
+  <rect x="40" y="262" width="278" height="90" rx="10" fill="#1f2937"/>
+  <text x="60" y="290" fill="#4ade80" font-size="20">📝</text>
+  <text x="90" y="290" fill="white" font-size="14" font-weight="600">1. Registrácia</text>
+  <text x="60" y="310" fill="#9ca3af" font-size="12">Len meno — žiadne heslá,</text>
+  <text x="60" y="326" fill="#9ca3af" font-size="12">žiadne emaily. Hraj ihneď.</text>
+  <rect x="342" y="262" width="278" height="90" rx="10" fill="#1f2937"/>
+  <text x="362" y="290" fill="#4ade80" font-size="20">🗺️</text>
+  <text x="392" y="290" fill="white" font-size="14" font-weight="600">2. Vyber trasu</text>
+  <text x="362" y="310" fill="#9ca3af" font-size="12">Interaktívna mapa s GPS</text>
+  <text x="362" y="326" fill="#9ca3af" font-size="12">súradnicami každej jamky.</text>
+  <rect x="644" y="262" width="278" height="90" rx="10" fill="#1f2937"/>
+  <text x="664" y="290" fill="#4ade80" font-size="20">🏌️</text>
+  <text x="694" y="290" fill="white" font-size="14" font-weight="600">3. Zahraj a zaskóruj</text>
+  <text x="664" y="310" fill="#9ca3af" font-size="12">Zapisuj údery, získavaj bonusy,</text>
+  <text x="664" y="326" fill="#9ca3af" font-size="12">vyhýbaj sa penalizáciám.</text>
+
+  <!-- COURSES header -->
+  <text x="40" y="390" fill="white" font-size="17" font-weight="700">Dostupné ihriská</text>
+
+  <!-- Course card 1 -->
+  <rect x="40" y="406" width="428" height="154" rx="12" fill="#1f2937"/>
+  <rect x="40" y="406" width="428" height="5" rx="3" fill="#16a34a"/>
+  <text x="62" y="436" fill="white" font-size="15" font-weight="700">Sad Janka Kráľa</text>
+  <text x="62" y="456" fill="#9ca3af" font-size="12">Najstarší verejný park v strednej Európe. 9 jamiek</text>
+  <text x="62" y="472" fill="#9ca3af" font-size="12">so zodiakovými súsošiami a gótickou vežou.</text>
+  <rect x="62" y="482" width="68" height="22" rx="11" fill="#14532d"/>
+  <text x="96" y="497" fill="#86efac" font-size="11" text-anchor="middle">9 jamiek</text>
+  <rect x="140" y="482" width="62" height="22" rx="11" fill="#14532d"/>
+  <text x="171" y="497" fill="#86efac" font-size="11" text-anchor="middle">Par 56</text>
+  <rect x="212" y="482" width="108" height="22" rx="11" fill="#1e3a5f"/>
+  <text x="266" y="497" fill="#93c5fd" font-size="11" text-anchor="middle">1.5 – 3 hodiny</text>
+  <rect x="62" y="516" width="118" height="30" rx="6" fill="#16a34a"/>
+  <text x="121" y="535" fill="white" font-size="13" text-anchor="middle">Zobraziť mapu</text>
+  <rect x="192" y="516" width="100" height="30" rx="6" fill="#374151"/>
+  <text x="242" y="535" fill="white" font-size="13" text-anchor="middle">Výsledky</text>
+
+  <!-- Course card 2 -->
+  <rect x="492" y="406" width="428" height="154" rx="12" fill="#1f2937"/>
+  <rect x="492" y="406" width="428" height="5" rx="3" fill="#16a34a"/>
+  <text x="514" y="436" fill="white" font-size="15" font-weight="700">Údery medzi vežami</text>
+  <text x="514" y="456" fill="#9ca3af" font-size="12">Bratislavská mestská odysea. Sochy, fontány a pamätníky</text>
+  <text x="514" y="472" fill="#9ca3af" font-size="12">pozdĺž Dunaja až po Národné divadlo.</text>
+  <rect x="514" y="482" width="68" height="22" rx="11" fill="#14532d"/>
+  <text x="548" y="497" fill="#86efac" font-size="11" text-anchor="middle">9 jamiek</text>
+  <rect x="592" y="482" width="62" height="22" rx="11" fill="#14532d"/>
+  <text x="623" y="497" fill="#86efac" font-size="11" text-anchor="middle">Par 53</text>
+  <rect x="664" y="482" width="108" height="22" rx="11" fill="#1e3a5f"/>
+  <text x="718" y="497" fill="#93c5fd" font-size="11" text-anchor="middle">1.5 – 3 hodiny</text>
+  <rect x="514" y="516" width="118" height="30" rx="6" fill="#16a34a"/>
+  <text x="573" y="535" fill="white" font-size="13" text-anchor="middle">Zobraziť mapu</text>
+  <rect x="644" y="516" width="100" height="30" rx="6" fill="#374151"/>
+  <text x="694" y="535" fill="white" font-size="13" text-anchor="middle">Výsledky</text>
+
+  <!-- Footer -->
+  <rect y="592" width="960" height="28" fill="#1f2937"/>
+  <text x="480" y="610" fill="#6b7280" font-size="12" text-anchor="middle">Urban Golf Bratislava © 2026</text>
+</svg>

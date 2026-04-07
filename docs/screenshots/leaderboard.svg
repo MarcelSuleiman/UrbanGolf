@@ -1,0 +1,105 @@
+<svg width="960" height="660" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+  <rect width="960" height="660" fill="#111827"/>
+
+  <!-- NAV -->
+  <rect width="960" height="58" fill="#14532d"/>
+  <text x="22" y="37" fill="white" font-size="20" font-weight="700">⛳ Urban Golf BA</text>
+  <text x="720" y="37" fill="#bbf7d0" font-size="13">Marcel</text>
+  <text x="800" y="37" fill="#bbf7d0" font-size="13">Odhlásiť</text>
+
+  <!-- Title -->
+  <text x="40" y="88" fill="white" font-size="20" font-weight="700">Výsledky — Sad Janka Kráľa</text>
+  <text x="40" y="110" fill="#9ca3af" font-size="14">9 jamiek · Par 56 · Bratislava</text>
+
+  <!-- ===== JEDNOTLIVCI ===== -->
+  <text x="40" y="142" fill="white" font-size="15" font-weight="700">Jednotlivci</text>
+  <!-- table header -->
+  <rect x="40" y="150" width="880" height="36" rx="6" fill="#374151"/>
+  <text x="62" y="173" fill="#9ca3af" font-size="12" font-weight="700">#</text>
+  <text x="100" y="173" fill="#9ca3af" font-size="12" font-weight="700">Hráč</text>
+  <text x="340" y="173" fill="#9ca3af" font-size="12" font-weight="700">Jamiek</text>
+  <text x="440" y="173" fill="#9ca3af" font-size="12" font-weight="700">Údery</text>
+  <text x="540" y="173" fill="#9ca3af" font-size="12" font-weight="700">Bonus</text>
+  <text x="640" y="173" fill="#9ca3af" font-size="12" font-weight="700">Penalizácia</text>
+  <text x="770" y="173" fill="#9ca3af" font-size="12" font-weight="700">Skóre</text>
+  <text x="850" y="173" fill="#9ca3af" font-size="12" font-weight="700">vs Par</text>
+  <!-- Row 1 gold -->
+  <rect x="40" y="186" width="880" height="40" rx="4" fill="#1f2937"/>
+  <text x="62" y="211" fill="#fbbf24" font-size="18">🥇</text>
+  <text x="100" y="212" fill="white" font-size="14" font-weight="600">Martin K.</text>
+  <text x="340" y="212" fill="#d1d5db" font-size="13">9/9</text>
+  <text x="440" y="212" fill="#d1d5db" font-size="13">48</text>
+  <text x="540" y="212" fill="#4ade80" font-size="13">-8</text>
+  <text x="640" y="212" fill="#d1d5db" font-size="13">0</text>
+  <text x="770" y="212" fill="white" font-size="14" font-weight="700">40</text>
+  <rect x="840" y="196" width="62" height="24" rx="5" fill="#14532d"/>
+  <text x="871" y="212" fill="#4ade80" font-size="13" font-weight="700" text-anchor="middle">-16</text>
+  <!-- Row 2 silver -->
+  <rect x="40" y="228" width="880" height="40" rx="4" fill="#111827"/>
+  <text x="62" y="253" fill="#9ca3af" font-size="18">🥈</text>
+  <text x="100" y="254" fill="white" font-size="14">Jana B.</text>
+  <text x="340" y="254" fill="#d1d5db" font-size="13">9/9</text>
+  <text x="440" y="254" fill="#d1d5db" font-size="13">52</text>
+  <text x="540" y="254" fill="#4ade80" font-size="13">-6</text>
+  <text x="640" y="254" fill="#fca5a5" font-size="13">+4</text>
+  <text x="770" y="254" fill="white" font-size="14" font-weight="700">50</text>
+  <rect x="840" y="238" width="62" height="24" rx="5" fill="#14532d"/>
+  <text x="871" y="254" fill="#4ade80" font-size="13" font-weight="700" text-anchor="middle">-6</text>
+  <!-- Row 3 bronze -->
+  <rect x="40" y="270" width="880" height="40" rx="4" fill="#1f2937"/>
+  <text x="62" y="295" fill="#b45309" font-size="18">🥉</text>
+  <text x="100" y="296" fill="white" font-size="14">Peter H.</text>
+  <text x="340" y="296" fill="#d1d5db" font-size="13">9/9</text>
+  <text x="440" y="296" fill="#d1d5db" font-size="13">55</text>
+  <text x="540" y="296" fill="#d1d5db" font-size="13">0</text>
+  <text x="640" y="296" fill="#fca5a5" font-size="13">+2</text>
+  <text x="770" y="296" fill="white" font-size="14" font-weight="700">57</text>
+  <rect x="840" y="280" width="62" height="24" rx="5" fill="#7f1d1d"/>
+  <text x="871" y="296" fill="#fca5a5" font-size="13" font-weight="700" text-anchor="middle">+1</text>
+  <!-- Row 4 -->
+  <rect x="40" y="312" width="880" height="40" rx="4" fill="#111827"/>
+  <text x="70" y="337" fill="#6b7280" font-size="13">4</text>
+  <text x="100" y="338" fill="white" font-size="14">Marcel</text>
+  <text x="340" y="338" fill="#d1d5db" font-size="13">9/9</text>
+  <text x="440" y="338" fill="#d1d5db" font-size="13">59</text>
+  <text x="540" y="296" fill="#d1d5db" font-size="13">0</text>
+  <text x="640" y="338" fill="#fca5a5" font-size="13">+7</text>
+  <text x="770" y="338" fill="white" font-size="14" font-weight="700">66</text>
+  <rect x="840" y="322" width="62" height="24" rx="5" fill="#7f1d1d"/>
+  <text x="871" y="338" fill="#fca5a5" font-size="13" font-weight="700" text-anchor="middle">+10</text>
+
+  <!-- ===== PRÁVE HRAJÚ ===== -->
+  <text x="40" y="386" fill="white" font-size="15" font-weight="700">Práve hrajú</text>
+  <rect x="40" y="394" width="880" height="36" rx="6" fill="#374151"/>
+  <text x="100" y="417" fill="#9ca3af" font-size="12" font-weight="700">Hráč</text>
+  <text x="340" y="417" fill="#9ca3af" font-size="12" font-weight="700">Jamiek</text>
+  <text x="440" y="417" fill="#9ca3af" font-size="12" font-weight="700">Údery</text>
+  <text x="540" y="417" fill="#9ca3af" font-size="12" font-weight="700">Bonus</text>
+  <text x="640" y="417" fill="#9ca3af" font-size="12" font-weight="700">Penalizácia</text>
+  <text x="770" y="417" fill="#9ca3af" font-size="12" font-weight="700">Priebežné</text>
+  <rect x="40" y="430" width="880" height="40" rx="4" fill="#1f2937"/>
+  <rect x="40" y="430" width="4" height="40" rx="2" fill="#f59e0b"/>
+  <text x="100" y="455" fill="white" font-size="14">JankoGolfer</text>
+  <text x="340" y="455" fill="#fbbf24" font-size="13">3/9</text>
+  <text x="440" y="455" fill="#d1d5db" font-size="13">49</text>
+  <text x="540" y="455" fill="#4ade80" font-size="13">-4</text>
+  <text x="640" y="455" fill="#fca5a5" font-size="13">+10</text>
+  <text x="770" y="455" fill="#fbbf24" font-size="14" font-weight="700">55 *</text>
+
+  <!-- ===== TÍMY ===== -->
+  <text x="40" y="504" fill="white" font-size="15" font-weight="700">Tímy</text>
+  <rect x="40" y="512" width="880" height="36" rx="6" fill="#374151"/>
+  <text x="62" y="535" fill="#9ca3af" font-size="12" font-weight="700">#</text>
+  <text x="100" y="535" fill="#9ca3af" font-size="12" font-weight="700">Tím</text>
+  <text x="440" y="535" fill="#9ca3af" font-size="12" font-weight="700">Členovia</text>
+  <text x="820" y="535" fill="#9ca3af" font-size="12" font-weight="700">Tímové skóre</text>
+  <rect x="40" y="548" width="880" height="50" rx="4" fill="#1f2937"/>
+  <text x="62" y="578" fill="#fbbf24" font-size="18">🥇</text>
+  <text x="100" y="578" fill="white" font-size="14" font-weight="600">Parkové srdcia</text>
+  <text x="440" y="572" fill="#9ca3af" font-size="11">Martin K. · Jana B. · Peter H. · Marcel</text>
+  <text x="820" y="578" fill="white" font-size="16" font-weight="700">213</text>
+
+  <!-- Footer -->
+  <rect y="632" width="960" height="28" fill="#1f2937"/>
+  <text x="480" y="650" fill="#6b7280" font-size="12" text-anchor="middle">Urban Golf Bratislava © 2026</text>
+</svg>

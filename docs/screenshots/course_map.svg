@@ -1,0 +1,120 @@
+<svg width="960" height="660" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+  <rect width="960" height="660" fill="#111827"/>
+
+  <!-- NAV -->
+  <rect width="960" height="58" fill="#14532d"/>
+  <text x="22" y="37" fill="white" font-size="20" font-weight="700">⛳ Urban Golf BA</text>
+  <text x="720" y="37" fill="#bbf7d0" font-size="13">Prihlásiť</text>
+  <text x="800" y="37" fill="#bbf7d0" font-size="13">Registrácia</text>
+  <text x="890" y="37" fill="#bbf7d0" font-size="13">Admin</text>
+
+  <!-- Title row -->
+  <text x="40" y="88" fill="white" font-size="20" font-weight="700">Sad Janka Kráľa</text>
+  <rect x="40" y="96" width="68" height="22" rx="11" fill="#14532d"/>
+  <text x="74" y="111" fill="#86efac" font-size="11" text-anchor="middle">9 jamiek</text>
+  <rect x="118" y="96" width="62" height="22" rx="11" fill="#14532d"/>
+  <text x="149" y="111" fill="#86efac" font-size="11" text-anchor="middle">Par 56</text>
+  <rect x="190" y="96" width="108" height="22" rx="11" fill="#1e3a5f"/>
+  <text x="244" y="111" fill="#93c5fd" font-size="11" text-anchor="middle">1.5 – 3 hodiny</text>
+  <rect x="780" y="76" width="140" height="32" rx="7" fill="#16a34a"/>
+  <text x="850" y="97" fill="white" font-size="13" font-weight="600" text-anchor="middle">▶  Hrať teraz</text>
+
+  <!-- MAP AREA -->
+  <rect x="40" y="130" width="880" height="390" rx="12" fill="#2d3748"/>
+
+  <!-- OSM-style map background -->
+  <rect x="40" y="130" width="880" height="390" rx="12" fill="#3d4f61"/>
+  <!-- Water (Danube suggestion) -->
+  <rect x="40" y="440" width="880" height="80" rx="0" fill="#2d5a7a"/>
+  <!-- Park area -->
+  <ellipse cx="480" cy="320" rx="280" ry="180" fill="#2d4a2d" opacity="0.6"/>
+  <!-- Streets -->
+  <line x1="40" y1="300" x2="920" y2="300" stroke="#4a5568" stroke-width="4"/>
+  <line x1="40" y1="380" x2="920" y2="380" stroke="#4a5568" stroke-width="3"/>
+  <line x1="300" y1="130" x2="300" y2="520" stroke="#4a5568" stroke-width="4"/>
+  <line x1="660" y1="130" x2="660" y2="520" stroke="#4a5568" stroke-width="3"/>
+  <line x1="40" y1="200" x2="920" y2="200" stroke="#4a5568" stroke-width="2"/>
+  <!-- Path through park -->
+  <path d="M 340 180 Q 400 260 450 320 Q 510 390 580 430" stroke="#5a7a5a" stroke-width="2" fill="none" stroke-dasharray="4,4"/>
+
+  <!-- Hole routes (dashed green lines) -->
+  <line x1="340" y1="180" x2="390" y2="220" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="390" y1="220" x2="430" y2="260" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="430" y1="260" x2="470" y2="295" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="470" y1="295" x2="500" y2="330" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="500" y1="330" x2="530" y2="350" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="530" y1="350" x2="560" y2="370" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="560" y1="370" x2="590" y2="395" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="590" y1="395" x2="610" y2="415" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="610" y1="415" x2="640" y2="435" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,3"/>
+
+  <!-- Start markers (green circles) -->
+  <circle cx="340" cy="180" r="11" fill="#16a34a" stroke="white" stroke-width="2"/>
+  <text x="340" y="185" fill="white" font-size="9" font-weight="700" text-anchor="middle">S</text>
+  <!-- Target markers (red circles with flag) -->
+  <circle cx="390" cy="220" r="11" fill="#dc2626" stroke="white" stroke-width="2"/>
+  <text x="390" y="225" fill="white" font-size="11" text-anchor="middle">⛳</text>
+  <circle cx="430" cy="260" r="11" fill="#16a34a" stroke="white" stroke-width="2"/>
+  <text x="430" y="265" fill="white" font-size="9" font-weight="700" text-anchor="middle">S</text>
+  <circle cx="470" cy="295" r="11" fill="#dc2626" stroke="white" stroke-width="2"/>
+  <text x="470" y="300" fill="white" font-size="11" text-anchor="middle">⛳</text>
+  <circle cx="500" cy="330" r="11" fill="#16a34a" stroke="white" stroke-width="2"/>
+  <text x="500" y="335" fill="white" font-size="9" font-weight="700" text-anchor="middle">S</text>
+  <circle cx="540" cy="360" r="11" fill="#dc2626" stroke="white" stroke-width="2"/>
+  <text x="540" y="365" fill="white" font-size="11" text-anchor="middle">⛳</text>
+  <circle cx="570" cy="385" r="11" fill="#16a34a" stroke="white" stroke-width="2"/>
+  <text x="570" y="390" fill="white" font-size="9" font-weight="700" text-anchor="middle">S</text>
+  <circle cx="610" cy="415" r="11" fill="#dc2626" stroke="white" stroke-width="2"/>
+  <text x="610" y="420" fill="white" font-size="11" text-anchor="middle">⛳</text>
+  <circle cx="640" cy="435" r="11" fill="#16a34a" stroke="white" stroke-width="2"/>
+  <text x="640" y="440" fill="white" font-size="9" font-weight="700" text-anchor="middle">S</text>
+
+  <!-- Popup (hole info) -->
+  <rect x="640" y="148" width="220" height="88" rx="8" fill="white"/>
+  <polygon points="720,236 740,236 730,250" fill="white"/>
+  <text x="656" y="170" fill="#1f2937" font-size="12" font-weight="700">Jamka 1 – Lev</text>
+  <text x="656" y="188" fill="#374151" font-size="11">Par: 5</text>
+  <text x="656" y="204" fill="#374151" font-size="11">Cieľ: Pomník leva</text>
+  <text x="656" y="220" fill="#16a34a" font-size="11">Bonus: -3 (priamy zásah)</text>
+
+  <!-- Map attribution -->
+  <text x="880" y="515" fill="#718096" font-size="10" text-anchor="end">© OpenStreetMap contributors | Leaflet</text>
+
+  <!-- Legend -->
+  <rect x="50" y="490" width="200" height="22" rx="4" fill="#1f2937" opacity="0.9"/>
+  <circle cx="68" cy="501" r="7" fill="#16a34a" stroke="white" stroke-width="1.5"/>
+  <text x="76" y="505" fill="white" font-size="10">S</text>
+  <text x="90" y="505" fill="#d1d5db" font-size="10">Štart</text>
+  <circle cx="138" cy="501" r="7" fill="#dc2626" stroke="white" stroke-width="1.5"/>
+  <text x="147" y="505" fill="#d1d5db" font-size="10">⛳ Cieľ</text>
+
+  <!-- HOLES LIST below map -->
+  <text x="40" y="554" fill="white" font-size="15" font-weight="700">Prehľad jamiek</text>
+
+  <!-- Hole grid -->
+  <rect x="40" y="566" width="192" height="58" rx="8" fill="#1f2937"/>
+  <text x="56" y="586" fill="#9ca3af" font-size="10">JAMKA 1 · PAR 5</text>
+  <text x="56" y="602" fill="white" font-size="13" font-weight="600">Lev</text>
+  <rect x="56" y="607" width="50" height="14" rx="7" fill="#14532d"/>
+  <text x="81" y="618" fill="#86efac" font-size="9" text-anchor="middle">bonus –3</text>
+
+  <rect x="246" y="566" width="192" height="58" rx="8" fill="#1f2937"/>
+  <text x="262" y="586" fill="#9ca3af" font-size="10">JAMKA 2 · PAR 8</text>
+  <text x="262" y="602" fill="white" font-size="13" font-weight="600">Fontána Pijúce holubice</text>
+
+  <rect x="452" y="566" width="192" height="58" rx="8" fill="#1f2937"/>
+  <text x="468" y="586" fill="#9ca3af" font-size="10">JAMKA 7 · PAR 8</text>
+  <text x="468" y="602" fill="white" font-size="13" font-weight="600">Janko Kráľ (socha)</text>
+  <rect x="468" y="607" width="66" height="14" rx="7" fill="#14532d"/>
+  <text x="501" y="618" fill="#86efac" font-size="9" text-anchor="middle">headshot –12</text>
+
+  <rect x="658" y="566" width="192" height="58" rx="8" fill="#1f2937"/>
+  <text x="674" y="586" fill="#9ca3af" font-size="10">JAMKA 9 · PAR 7</text>
+  <text x="674" y="602" fill="white" font-size="13" font-weight="600">Gotická veža</text>
+  <rect x="674" y="607" width="58" height="14" rx="7" fill="#14532d"/>
+  <text x="703" y="618" fill="#86efac" font-size="9" text-anchor="middle">kupola –8</text>
+
+  <!-- Footer -->
+  <rect y="632" width="960" height="28" fill="#1f2937"/>
+  <text x="480" y="650" fill="#6b7280" font-size="12" text-anchor="middle">Urban Golf Bratislava © 2026</text>
+</svg>
