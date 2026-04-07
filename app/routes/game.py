@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
+﻿from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from app import db
 from app.models import Player, Team, TeamMember, Course, Hole, Round, Score, BonusTarget
 from datetime import datetime, timezone
@@ -108,6 +108,11 @@ def play_hole(round_id, hole_num):
 
         db.session.commit()
 
+        # If editing a previous hole, return to the hole the player came from
+        return_hole = request.form.get("return_hole", type=int)
+        if return_hole:
+            return redirect(url_for("game.play_hole", round_id=round_.id, hole_num=return_hole))
+
         # Check if there's a next hole
         next_hole = Hole.query.filter_by(
             course_id=round_.course_id, number=hole_num + 1
@@ -123,6 +128,10 @@ def play_hole(round_id, hole_num):
 
     existing_score = Score.query.filter_by(round_id=round_.id, hole_id=hole.id).first()
     total_holes = len(round_.course.holes)
+    played_scores = sorted(
+        [s for s in round_.scores if s.hole.number != hole_num],
+        key=lambda s: s.hole.number,
+    )
 
     return render_template(
         "game/play_hole.html",
@@ -131,6 +140,7 @@ def play_hole(round_id, hole_num):
         hole_num=hole_num,
         total_holes=total_holes,
         existing_score=existing_score,
+        played_scores=played_scores,
     )
 
 

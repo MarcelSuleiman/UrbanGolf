@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}Jamka {{ hole_num }} – {{ round.course.name }}{% endblock %}
 
@@ -92,6 +92,8 @@
                       placeholder="Napr. trafil som babku s nákupom...">{{ existing_score.notes if existing_score else '' }}</textarea>
         </div>
 
+        <input type="hidden" name="return_hole" value="">
+
         <button type="submit" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded font-bold text-lg">
             {% if hole_num < total_holes %}
                 Ďalšia jamka →
@@ -100,11 +102,57 @@
             {% endif %}
         </button>
     </form>
+
+    {% if played_scores %}
+    <div class="mt-6">
+        <h3 class="text-sm font-medium text-gray-400 mb-2">Predošlé jamky</h3>
+        <div class="bg-gray-800 rounded-lg overflow-hidden">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-700">
+                    <tr>
+                        <th class="px-3 py-2 text-left text-gray-400">Jamka</th>
+                        <th class="px-3 py-2 text-center text-gray-400">Údery</th>
+                        <th class="px-3 py-2 text-center text-green-400">Bonus</th>
+                        <th class="px-3 py-2 text-center text-red-400">Penaliz.</th>
+                        <th class="px-3 py-2 text-center font-bold">Spolu</th>
+                        <th class="px-3 py-2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in played_scores %}
+                    <tr class="border-t border-gray-700">
+                        <td class="px-3 py-2 text-gray-300">{{ s.hole.number }}{% if s.hole.name %} – {{ s.hole.name }}{% endif %}</td>
+                        <td class="px-3 py-2 text-center">{{ s.strokes }}</td>
+                        <td class="px-3 py-2 text-center text-green-400">{{ s.bonus_points if s.bonus_points else '' }}</td>
+                        <td class="px-3 py-2 text-center text-red-400">{{ ('+' ~ s.penalty_points) if s.penalty_points else '' }}</td>
+                        <td class="px-3 py-2 text-center font-bold
+                            {% if s.total < s.hole.par %}text-green-400
+                            {% elif s.total == s.hole.par %}text-white
+                            {% else %}text-red-400{% endif %}">{{ s.total }}</td>
+                        <td class="px-3 py-2 text-right">
+                            <a href="{{ url_for('game.play_hole', round_id=round.id, hole_num=s.hole.number) }}?return={{ hole_num }}"
+                               class="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-gray-300">
+                                Upraviť
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
+    // Propagate ?return= query param into the hidden return_hole field
+    const returnHole = new URLSearchParams(window.location.search).get('return');
+    if (returnHole) {
+        document.querySelector('input[name="return_hole"]').value = returnHole;
+    }
+
     document.querySelectorAll('#bonus_points, #penalty_points').forEach(input => {
         input.addEventListener('focus', function() {
             if (this.value === '0') this.value = '';
