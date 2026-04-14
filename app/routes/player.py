@@ -174,3 +174,21 @@ def edit_team(team_id):
         players=all_players,
         current_member_ids=current_member_ids,
     )
+
+
+@player_bp.route("/team/<int:team_id>/delete", methods=["POST"])
+def delete_team(team_id):
+    if "player_id" not in session:
+        flash("Najprv sa prihlás.", "error")
+        return redirect(url_for("player.login"))
+
+    team = Team.query.get_or_404(team_id)
+    team_name = team.name
+
+    # TeamMember záznamy sa zmažú automaticky (cascade="all, delete-orphan")
+    # Hráči (Player) ostávajú nedotknutí
+    db.session.delete(team)
+    db.session.commit()
+
+    flash(f'Tím "{team_name}" bol zmazaný.', "success")
+    return redirect(url_for("player.teams"))

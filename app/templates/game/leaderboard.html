@@ -100,7 +100,7 @@
                 {% for entry in team_inprogress %}
                     <tr class="border-t border-gray-700">
                         <td class="px-4 py-2 text-gray-400">{{ loop.index }}</td>
-                        <td class="px-4 py-2 font-medium">{{ entry.team.name }}</td>
+                        <td class="px-4 py-2 font-medium">{{ entry.team_name }}</td>
                         <td class="px-4 py-2 text-xs text-gray-400">
                             {% for r in entry.rounds %}
                                 {% if r.is_complete %}
@@ -143,7 +143,7 @@
                             {% elif loop.index == 3 %}🥉
                             {% else %}{{ loop.index }}{% endif %}
                         </td>
-                        <td class="px-4 py-2 font-medium">{{ entry.team.name }}</td>
+                        <td class="px-4 py-2 font-medium">{{ entry.team_name }}</td>
                         <td class="px-4 py-2 text-center text-gray-400 text-xs">
                             {% for r in entry.rounds %}
                                 {{ r.player.name }} ({{ r.total_score }}){% if not loop.last %}, {% endif %}

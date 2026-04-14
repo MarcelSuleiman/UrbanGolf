@@ -15,6 +15,7 @@ def create_app():
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    os.makedirs(os.path.join(basedir, "..", "instance"), exist_ok=True)
     db.init_app(app)
 
     from app.routes.main import main_bp

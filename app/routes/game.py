@@ -51,10 +51,18 @@ def start_round(course_id):
         team_id = request.form.get("team_id")
         team_id = int(team_id) if team_id else None
 
+        team_name = None
+        if team_id:
+            from app.models import Team as _Team
+            t = _Team.query.get(team_id)
+            if t:
+                team_name = t.name
+
         round_ = Round(
             player_id=player.id,
             course_id=course.id,
             team_id=team_id,
+            team_name=team_name,
         )
         db.session.add(round_)
         db.session.commit()
@@ -171,29 +179,29 @@ def leaderboard(course_id):
     in_progress = [r for r in in_progress if r.scores]
     in_progress = sorted(in_progress, key=lambda r: r.total_score)
 
-    # Team leaderboard — group all rounds (any state, with at least 1 score) by team
+    # Team leaderboard — group all rounds (any state, with at least 1 score) by team_name
     all_team_rounds_grouped = {}
     all_team_rounds = (
         Round.query.filter(
             Round.course_id == course_id,
-            Round.team_id.isnot(None),
+            Round.team_name.isnot(None),
         ).all()
     )
     for r in all_team_rounds:
         if not r.scores:
             continue
-        tid = r.team_id
-        if tid not in all_team_rounds_grouped:
-            all_team_rounds_grouped[tid] = {
-                "team": r.team,
+        tname = r.team_name
+        if tname not in all_team_rounds_grouped:
+            all_team_rounds_grouped[tname] = {
+                "team_name": tname,
                 "rounds": [],
                 "total": 0,
                 "has_incomplete": False,
             }
-        all_team_rounds_grouped[tid]["rounds"].append(r)
-        all_team_rounds_grouped[tid]["total"] += r.total_score
+        all_team_rounds_grouped[tname]["rounds"].append(r)
+        all_team_rounds_grouped[tname]["total"] += r.total_score
         if not r.is_complete:
-            all_team_rounds_grouped[tid]["has_incomplete"] = True
+            all_team_rounds_grouped[tname]["has_incomplete"] = True
 
     # Compute average score per player for each team entry
     for v in all_team_rounds_grouped.values():
