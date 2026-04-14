@@ -8,6 +8,7 @@ class Round(db.Model):
     player_id = db.Column(db.Integer, db.ForeignKey("player.id"), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=False)
     team_id = db.Column(db.Integer, db.ForeignKey("team.id"), nullable=True)
+    team_name = db.Column(db.String(100), nullable=True)
     started_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     completed_at = db.Column(db.DateTime, nullable=True)
     is_complete = db.Column(db.Boolean, default=False)
